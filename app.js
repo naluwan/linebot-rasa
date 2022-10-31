@@ -82,6 +82,14 @@ bot.on('postback', (e) => {
           },
         },
       ).catch((err) => console.log(err));
+    case 'playVideo':
+      e.reply(e.replyToken, {
+        type: 'video',
+        originalContentUrl: 'https://youtu.be/dUNTBSsrl-c',
+        previewImageUrl:
+          'https://i.ytimg.com/vi/dUNTBSsrl-c/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAV3jRBy5VdU8N_nvSgsV6XApPu8g',
+      });
+      break;
     default:
       return axios(
         `https://api.line.me/v2/bot/user/${e.source.userId}/richmenu/${process.env.DEFAULT_RICH_MENU_ID}`,
