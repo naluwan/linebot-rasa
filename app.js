@@ -4,6 +4,7 @@ const session = require('express-session');
 const linebot = require('linebot');
 const passport = require('passport');
 const axios = require('axios');
+const querystring = require('querystring');
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
