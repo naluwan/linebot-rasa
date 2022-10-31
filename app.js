@@ -73,27 +73,25 @@ bot.on('postback', (e) => {
   console.log('postback action:', data);
   switch (data.action) {
     case 'nextPage':
-      return axios
-        .post(
-          `https://api.line.me/v2/bot/user/${e.source.userId}/richmenu/${process.env.SECOND_RICH_MENU_ID}`,
-          {
-            headers: {
-              Authorization: `Bearer ${process.env.CHANNEL_ACCESS_TOKEN}`,
-            },
+      return axios(
+        `https://api.line.me/v2/bot/user/${e.source.userId}/richmenu/${process.env.SECOND_RICH_MENU_ID}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${process.env.CHANNEL_ACCESS_TOKEN}`,
           },
-        )
-        .catch((err) => console.log(err));
+        },
+      ).catch((err) => console.log(err));
     default:
-      return axios
-        .post(
-          `https://api.line.me/v2/bot/user/${e.source.userId}/richmenu/${process.env.DEFAULT_RICH_MENU_ID}`,
-          {
-            headers: {
-              Authorization: `Bearer ${process.env.CHANNEL_ACCESS_TOKEN}`,
-            },
+      return axios(
+        `https://api.line.me/v2/bot/user/${e.source.userId}/richmenu/${process.env.DEFAULT_RICH_MENU_ID}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${process.env.CHANNEL_ACCESS_TOKEN}`,
           },
-        )
-        .catch((err) => console.log(err));
+        },
+      ).catch((err) => console.log(err));
   }
 });
 
