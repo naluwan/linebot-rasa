@@ -4,8 +4,6 @@ const session = require('express-session');
 const linebot = require('linebot');
 const passport = require('passport');
 const axios = require('axios');
-const lineNotifyRouter = require('./routes/line-notify');
-const lineRouter = require('./routes/line');
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
