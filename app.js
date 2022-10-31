@@ -34,7 +34,7 @@ bot.on('message', (e) => {
   console.log(e.message.text);
   axios
     .post(`https://0cbe-114-32-167-155.jp.ngrok.io/webhooks/rest/webhook`, {
-      sender: 'user',
+      sender: `${e.source.userId}`,
       message: e.message.text,
     })
     .then((response) => {
@@ -71,35 +71,30 @@ bot.on('postback', (e) => {
   console.log('postback data:', e.postback.data);
   let data = querystring.parse(e.postback.data);
   console.log('postback action:', data);
-  axios
-    .post(`https://0cbe-114-32-167-155.jp.ngrok.io/webhooks/rest/webhook`, {
-      sender: 'user',
-      message: data.action,
-    })
-    .then((response) => {
-      if (response.data[0].buttons) {
-        const items = response.data[0].buttons.map((button) => ({
-          type: 'action',
-          action: {
-            type: 'message',
-            label: `${button.title}`,
-            text: `${button.title}`,
+  switch (data.action) {
+    case 'nextPage':
+      return axios
+        .post(
+          `https://api.line.me/v2/bot/user/${e.source.userId}/richmenu/${process.env.SECOND_RICH_MENU_ID}`,
+          {
+            headers: {
+              authorization: `Bearer ${process.CHANNEL_ACCESS_TOKEN}`,
+            },
           },
-        }));
-
-        const message = {
-          type: 'text',
-          text: response.data[0].text,
-          quickReply: {
-            items,
+        )
+        .catch((err) => console.log(err));
+    default:
+      return axios
+        .post(
+          `https://api.line.me/v2/bot/user/${e.source.userId}/richmenu/${process.env.DEFAULT_RICH_MENU_ID}`,
+          {
+            headers: {
+              authorization: `Bearer ${process.CHANNEL_ACCESS_TOKEN}`,
+            },
           },
-        };
-        e.reply(message);
-      } else {
-        e.reply(response.data[0].text);
-      }
-    })
-    .catch((err) => console.log(err));
+        )
+        .catch((err) => console.log(err));
+  }
 });
 
 app.post('/', linebotParser);
