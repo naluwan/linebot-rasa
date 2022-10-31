@@ -83,7 +83,7 @@ bot.on('postback', (e) => {
         },
       ).catch((err) => console.log(err));
     case 'playVideo':
-      e.reply(e.replyToken, {
+      e.reply({
         type: 'video',
         originalContentUrl: 'https://youtu.be/dUNTBSsrl-c',
         previewImageUrl:
