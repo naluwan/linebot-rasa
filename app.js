@@ -78,7 +78,7 @@ bot.on('postback', (e) => {
           `https://api.line.me/v2/bot/user/${e.source.userId}/richmenu/${process.env.SECOND_RICH_MENU_ID}`,
           {
             headers: {
-              authorization: `Bearer ${process.CHANNEL_ACCESS_TOKEN}`,
+              authorization: `Bearer ${process.env.CHANNEL_ACCESS_TOKEN}`,
             },
           },
         )
@@ -89,7 +89,7 @@ bot.on('postback', (e) => {
           `https://api.line.me/v2/bot/user/${e.source.userId}/richmenu/${process.env.DEFAULT_RICH_MENU_ID}`,
           {
             headers: {
-              authorization: `Bearer ${process.CHANNEL_ACCESS_TOKEN}`,
+              authorization: `Bearer ${process.env.CHANNEL_ACCESS_TOKEN}`,
             },
           },
         )
