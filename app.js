@@ -68,10 +68,9 @@ bot.on('message', (e) => {
           }
         })
         .catch((err) => console.log(err));
-  }
     case 'postback':
-      let data = querystring.parser(e.postback.data)
-      console.log('postback action:', data)
+      let data = querystring.parser(e.postback.data);
+      console.log('postback action:', data);
       return axios
         .post(`https://0cbe-114-32-167-155.jp.ngrok.io/webhooks/rest/webhook`, {
           sender: 'user',
@@ -101,7 +100,7 @@ bot.on('message', (e) => {
           }
         })
         .catch((err) => console.log(err));
-
+  }
 });
 
 app.post('/', linebotParser);
