@@ -5,13 +5,12 @@ const linebot = require('linebot');
 const passport = require('passport');
 const axios = require('axios');
 const lineNotifyRouter = require('./routes/line-notify');
+const lineRouter = require('./routes/line');
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 const port = process.env.PORT || 3330;
-
-app.use('/login/line_notify', lineNotifyRouter);
 
 const bot = linebot({
   channelId: process.env.CHANNEL_ID,
@@ -34,41 +33,44 @@ app.use(passport.session());
 bot.on('message', (e) => {
   console.log('message event:', e);
   console.log(e.message.text);
-  switch (e.type) {
-    case 'message':
-      return axios
-        .post(`https://0cbe-114-32-167-155.jp.ngrok.io/webhooks/rest/webhook`, {
-          sender: 'user',
-          message: e.message.text,
-        })
-        .then((response) => {
-          console.log(response);
-          console.log(response.data[0].text);
-          console.log(response.data[0].buttons);
-          if (response.data[0].buttons) {
-            const items = response.data[0].buttons.map((button) => ({
-              type: 'action',
-              action: {
-                type: 'message',
-                label: `${button.title}`,
-                text: `${button.title}`,
-              },
-            }));
+  axios
+    .post(`https://0cbe-114-32-167-155.jp.ngrok.io/webhooks/rest/webhook`, {
+      sender: 'user',
+      message: e.message.text,
+    })
+    .then((response) => {
+      console.log(response);
+      console.log(response.data[0].text);
+      console.log(response.data[0].buttons);
+      if (response.data[0].buttons) {
+        const items = response.data[0].buttons.map((button) => ({
+          type: 'action',
+          action: {
+            type: 'message',
+            label: `${button.title}`,
+            text: `${button.title}`,
+          },
+        }));
 
-            const message = {
-              type: 'text',
-              text: response.data[0].text,
-              quickReply: {
-                items,
-              },
-            };
-            e.reply(message);
-          } else {
-            e.reply(response.data[0].text);
-          }
-        })
-        .catch((err) => console.log(err));
-    case 'postback':
+        const message = {
+          type: 'text',
+          text: response.data[0].text,
+          quickReply: {
+            items,
+          },
+        };
+        e.reply(message);
+      } else {
+        e.reply(response.data[0].text);
+      }
+    })
+    .catch((err) => console.log(err));
+});
+
+bot.on('postback', e => {
+  console.log('postback event:', e);
+  console.log('postback data:', e.postback.data);
+  case 'postback':
       let data = querystring.parser(e.postback.data);
       console.log('postback action:', data);
       return axios
@@ -100,8 +102,7 @@ bot.on('message', (e) => {
           }
         })
         .catch((err) => console.log(err));
-  }
-});
+})
 
 app.post('/', linebotParser);
 app.listen(port, () => {
