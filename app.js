@@ -69,7 +69,7 @@ bot.on('message', (e) => {
 bot.on('postback', (e) => {
   console.log('postback event:', e);
   console.log('postback data:', e.postback.data);
-  let data = querystring.parser(e.postback.data);
+  let data = querystring.parse(e.postback.data);
   console.log('postback action:', data);
   axios
     .post(`https://0cbe-114-32-167-155.jp.ngrok.io/webhooks/rest/webhook`, {
