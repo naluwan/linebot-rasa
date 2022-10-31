@@ -31,56 +31,77 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-bot.on('once', (e) => {
-  console.log('connect event:', e);
-  console.log('打開聊天室窗');
-  axios
-    .post(`https://0cbe-114-32-167-155.jp.ngrok.io/webhooks/rest/webhook`, {
-      sender: 'user',
-      message: `/get_started`,
-    })
-    .then((response) => {
-      console.log('response:', response);
-      e.reply(response.data[0].text);
-    })
-    .catch((err) => console.log(err));
-});
-
 bot.on('message', (e) => {
   console.log('message event:', e);
   console.log(e.message.text);
-  axios
-    .post(`https://0cbe-114-32-167-155.jp.ngrok.io/webhooks/rest/webhook`, {
-      sender: 'user',
-      message: e.message.text,
-    })
-    .then((response) => {
-      console.log(response);
-      console.log(response.data[0].text);
-      console.log(response.data[0].buttons);
-      if (response.data[0].buttons) {
-        const items = response.data[0].buttons.map((button) => ({
-          type: 'action',
-          action: {
-            type: 'message',
-            label: `${button.title}`,
-            text: `${button.title}`,
-          },
-        }));
+  switch (e.type) {
+    case 'message':
+      return axios
+        .post(`https://0cbe-114-32-167-155.jp.ngrok.io/webhooks/rest/webhook`, {
+          sender: 'user',
+          message: e.message.text,
+        })
+        .then((response) => {
+          console.log(response);
+          console.log(response.data[0].text);
+          console.log(response.data[0].buttons);
+          if (response.data[0].buttons) {
+            const items = response.data[0].buttons.map((button) => ({
+              type: 'action',
+              action: {
+                type: 'message',
+                label: `${button.title}`,
+                text: `${button.title}`,
+              },
+            }));
 
-        const message = {
-          type: 'text',
-          text: response.data[0].text,
-          quickReply: {
-            items,
-          },
-        };
-        e.reply(message);
-      } else {
-        e.reply(response.data[0].text);
-      }
-    })
-    .catch((err) => console.log(err));
+            const message = {
+              type: 'text',
+              text: response.data[0].text,
+              quickReply: {
+                items,
+              },
+            };
+            e.reply(message);
+          } else {
+            e.reply(response.data[0].text);
+          }
+        })
+        .catch((err) => console.log(err));
+  }
+    case 'postback':
+      let data = querystring.parser(e.postback.data)
+      console.log('postback action:', data)
+      return axios
+        .post(`https://0cbe-114-32-167-155.jp.ngrok.io/webhooks/rest/webhook`, {
+          sender: 'user',
+          message: data.action,
+        })
+        .then((response) => {
+          if (response.data[0].buttons) {
+            const items = response.data[0].buttons.map((button) => ({
+              type: 'action',
+              action: {
+                type: 'message',
+                label: `${button.title}`,
+                text: `${button.title}`,
+              },
+            }));
+
+            const message = {
+              type: 'text',
+              text: response.data[0].text,
+              quickReply: {
+                items,
+              },
+            };
+            e.reply(message);
+          } else {
+            e.reply(response.data[0].text);
+          }
+        })
+        .catch((err) => console.log(err));
+
 });
 
 app.post('/', linebotParser);
