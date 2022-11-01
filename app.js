@@ -39,9 +39,10 @@ bot.on('message', (e) => {
     })
     .then((response) => {
       console.log(response.data);
-      console.log(response.data[0].text);
-      console.log(response.data[0].buttons);
+
       if (response.data[0].buttons) {
+        console.log('response text:', response.data[0].text);
+        console.log('response buttons:', response.data[0].buttons);
         const items = response.data[0].buttons.map((button) => ({
           type: 'action',
           action: {
@@ -62,6 +63,7 @@ bot.on('message', (e) => {
       } else if (!response.data.length) {
         e.reply(`很抱歉!我不明白「${e.message.text}」是什麼意思，請重新嘗試!`);
       } else {
+        console.log('response text:', response.data[0].text);
         e.reply(response.data[0].text);
       }
     })
