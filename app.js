@@ -59,6 +59,8 @@ bot.on('message', (e) => {
           },
         };
         e.reply(message);
+      } else if (!response.data.length) {
+        e.reply(`很抱歉!我不明白「${e.message.text}」是什麼意思，請重新嘗試!`);
       } else {
         e.reply(response.data[0].text);
       }
