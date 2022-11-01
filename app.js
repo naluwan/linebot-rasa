@@ -38,7 +38,7 @@ bot.on('message', (e) => {
       message: e.message.text,
     })
     .then((response) => {
-      console.log(response);
+      console.log(response.data);
       console.log(response.data[0].text);
       console.log(response.data[0].buttons);
       if (response.data[0].buttons) {
