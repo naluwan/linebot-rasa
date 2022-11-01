@@ -92,8 +92,9 @@ bot.on('postback', (e) => {
     case 'playVideo':
       e.reply({
         type: 'video',
-        originalContentUrl: 'https://youtu.be/dUNTBSsrl-c',
-        previewImageUrl: 'https://youtu.be/rpJbLpqUECk',
+        originalContentUrl: 'https://youtu.be/rpJbLpqUECk',
+        previewImageUrl:
+          'https://i.ytimg.com/vi/dUNTBSsrl-c/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAV3jRBy5VdU8N_nvSgsV6XApPu8g',
       });
       break;
     default:
