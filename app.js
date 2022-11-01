@@ -31,14 +31,19 @@ app.use(passport.session());
 
 bot.on('message', (e) => {
   console.log('message event:', e);
-  console.log(e.message.text);
+  console.log('message text:', e.message.text);
   axios
     .post(`https://0cbe-114-32-167-155.jp.ngrok.io/webhooks/rest/webhook`, {
       sender: `${e.source.userId}`,
       message: e.message.text,
     })
     .then((response) => {
-      console.log(response.data);
+      console.log('response data:', response.data);
+      if (!response.data.length) {
+        return e.reply(
+          `很抱歉!我不明白「${e.message.text}」是什麼意思，請重新嘗試!`,
+        );
+      }
 
       if (response.data[0].buttons) {
         console.log('response text:', response.data[0].text);
@@ -60,8 +65,6 @@ bot.on('message', (e) => {
           },
         };
         e.reply(message);
-      } else if (!response.data.length) {
-        e.reply(`很抱歉!我不明白「${e.message.text}」是什麼意思，請重新嘗試!`);
       } else {
         console.log('response text:', response.data[0].text);
         e.reply(response.data[0].text);
