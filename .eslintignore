@@ -1,5 +1,2 @@
-build
-dist
-node_modules
-public
-!.eslintrc.js
+/node_modules/*
+/tests/*
