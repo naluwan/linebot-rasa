@@ -4,6 +4,7 @@ const session = require('express-session');
 const linebot = require('linebot');
 const passport = require('passport');
 const axios = require('axios');
+const cors = require('cors');
 const querystring = require('querystring');
 
 if (process.env.NODE_ENV !== 'production') {
@@ -28,12 +29,20 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(
+  cors({
+    credentials: true,
+    preflightContinue: false,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    origin: '*'
+  })
+);
 
 bot.on('message', e => {
   console.log('message event:', e);
   console.log('message text:', e.message.text);
   axios
-    .post(`https://e371-114-32-167-155.jp.ngrok.io/webhooks/rest/webhook`, {
+    .post(`https://47b8-114-34-127-30.jp.ngrok.io/webhooks/rest/webhook`, {
       sender: `${e.source.userId}`,
       message: e.message.text
     })
